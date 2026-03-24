@@ -1,0 +1,6 @@
+@Eia.Api_HostAddress = http://localhost:5090
+
+GET {{Eia.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
