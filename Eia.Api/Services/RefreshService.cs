@@ -87,23 +87,39 @@ namespace Eia.Api.Services
             if (string.IsNullOrWhiteSpace(apiKey))
                 return (false, "EIA_API_KEY not set in the API configuration.");
 
-            logger.LogInformation("Launching connector subprocess...");
+            logger.LogInformation("Launching connector subprocess from: {Path}", connectorPath);
 
             var isDocker = connectorPath.EndsWith(".dll");
 
-            var arguments = isDocker
-                ? $"\"{connectorPath}\""
-                : $"run --project \"{connectorPath}\"";
+            string fileName;
+            string arguments;
+            string workingDir;
 
-            var connectorDir = isDocker
-                ? Path.GetDirectoryName(connectorPath)
-                : Path.GetFullPath(Path.GetDirectoryName(connectorPath) ?? "../Eia.Connector");
+            if (isDocker)
+            {
+                fileName = "dotnet";
+                arguments = $"\"{connectorPath}\"";
+                workingDir = Path.GetDirectoryName(connectorPath)
+                    ?? "/app/connector";
+            }
+            else
+            {
+                fileName = "dotnet";
+                arguments = $"run --project \"{connectorPath}\"";
+                workingDir = Path.GetFullPath(
+                    Path.GetDirectoryName(connectorPath) ?? "../Eia.Connector");
+            }
+
+            var parquetPath = config["Output:ParquetPath"] ?? "/app/data/nuclear_outages_raw.parquet";
+            var parquetDir = Path.GetDirectoryName(parquetPath);
+            if (!string.IsNullOrEmpty(parquetDir))
+                Directory.CreateDirectory(parquetDir);
 
             var psi = new System.Diagnostics.ProcessStartInfo
             {
-                FileName = "dotnet",
+                FileName = fileName,
                 Arguments = arguments,
-                WorkingDirectory = connectorDir,
+                WorkingDirectory = workingDir,
                 RedirectStandardOutput = true,
                 RedirectStandardError = true,
                 UseShellExecute = false,
@@ -111,6 +127,7 @@ namespace Eia.Api.Services
             };
 
             psi.Environment["EIA_API_KEY"] = apiKey;
+            psi.Environment["OUTPUT__PARQUETPATH"] = parquetPath;
 
             var process = new System.Diagnostics.Process { StartInfo = psi };
             process.Start();
