@@ -22,7 +22,7 @@ COPY --from=build /app/api .
 ENV ASPNETCORE_ENVIRONMENT=Production
 ENV ASPNETCORE_URLS=http://+:8080
 
-RUN mkdir -p /app/data
+RUN mkdir -p /app/data /app/connector/data
 
 EXPOSE 8080
 
