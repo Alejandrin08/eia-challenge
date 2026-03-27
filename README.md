@@ -1,8 +1,6 @@
-# EIA Nuclear Outages — Data Pipeline & Dashboard
+# EIA Nuclear Outages 
 
-Solución integral End-to-End que extrae, transforma, almacena y visualiza datos de la API de la *Energy Information Administration (EIA)* sobre cortes de energía nuclear.
-
-El sistema consta de un pipeline de datos automatizado, una API RESTful y un dashboard interactivo en React.
+Proyecto que extrae, almacena y visualiza datos de la API de la *Energy Information Administration (EIA)* sobre cortes de energía nuclear.
 
 ---
 
@@ -10,22 +8,22 @@ El sistema consta de un pipeline de datos automatizado, una API RESTful y un das
 
 | Capa | Tecnología |
 |---|---|
-| Data Connector | C# (.NET 9) con resiliencia usando *Polly* |
+| Data Connector | C# (.NET 9) |
 | Almacenamiento Intermedio | Parquet (*Parquet.Net*) |
 | Base de Datos | SQLite + Entity Framework Core |
 | Backend API | ASP.NET Core Minimal APIs + JWT |
 | Frontend | React, Vite, Bootstrap, Axios |
-| Despliegue | Docker + Docker Compose (multi-stage builds) |
+| Despliegue | Docker + Docker Compose |
 
 ---
 
 ## Configuración de la API Key
 
-Para ejecutar este proyecto es necesario contar con una API Key proporcionada por el gobierno de EE. UU.
+Para ejecutar este proyecto es necesario contar con una API Key.
 
-1. Visita el portal oficial de datos abiertos: <https://www.eia.gov/opendata/>
-2. Regístrate con tu correo electrónico.
-3. Recibirás tu clave de acceso en tu bandeja de entrada.
+1. Obtener API Key en: <https://www.eia.gov/opendata/>
+2. Regístrar con correo electrónico.
+3. Recibirás tu clave de acceso en tu correo.
 
 ---
 
@@ -45,12 +43,10 @@ Para ejecutar este proyecto es necesario contar con una API Key proporcionada po
 
 ## Opción 1: Instalación con Docker (Quick Start)
 
-Forma recomendada para levantar el proyecto completo en producción.
-
 **1. Clonar el repositorio**
 ```bash
-git clone <repo_url>
-cd <repo>
+git clone https://github.com/Alejandrin08/eia-challenge.git
+cd eia-challenge
 ```
 
 **2. Crear archivo de variables de entorno**
@@ -84,8 +80,6 @@ dotnet user-secrets set "EIA_API_KEY" "tu_api_key_aqui"
 dotnet run
 ```
 
-API disponible en: <http://localhost:5090>
-
 **2. Configurar Frontend**
 
 En una terminal nueva:
@@ -94,8 +88,6 @@ cd Eia.Frontend
 npm install
 npm run dev
 ```
-
-Disponible en: <http://localhost:5173>
 
 ---
 
@@ -122,9 +114,9 @@ dotnet ef database update
 
 ## Supuestos del Proyecto
 
-**Autenticación preconfigurada:** El sistema es de uso interno corporativo. El pipeline siembra automáticamente un usuario administrador por defecto durante la inicialización.
+**Autenticación preconfigurada:** El sistema coloca automáticamente un usuario administrador por defecto.
 
-**Estructura de datos de la EIA:** Se asume que el contrato del endpoint `/v2/nuclear-outages/us-nuclear-outages/data` mantiene su estructura actual (`period`, `capacity`, `outage`). El formato intermedio Parquet se genera en base a esta estructura exacta.
+**Estructura de datos de la EIA:** Se asume que el endpoint `/v2/nuclear-outages/us-nuclear-outages/data` mantiene su estructura actual (`period`, `capacity`, `outage`). El formato intermedio Parquet se genera en base a esta estructura exacta.
 
 ### Credenciales por defecto
 
@@ -135,21 +127,9 @@ dotnet ef database update
 
 ---
 
-## Flujo ETL
-
-1. Inicia sesión en el dashboard.
-2. Presiona **"Extraer Datos Nuevos"**.
-3. La API ejecuta el conector como subproceso.
-4. El conector extrae datos con paginación, valida esquemas y guarda la información en `nuclear_outages_raw.parquet`.
-5. Se actualiza `checkpoint.json` para garantizar cargas incrementales futuras.
-6. La API lee el archivo Parquet y realiza una operación de Upsert en SQLite.
-7. El frontend se actualiza automáticamente mostrando la información.
-
----
-
 ## Pruebas y Resultados
 
-El proyecto cuenta con una suite de pruebas unitarias y de integración desarrolladas con **xUnit**, cubriendo:
+El proyecto cuenta con una conjunto de pruebas unitarias y de integración desarrolladas con **MSTest**, cubriendo:
 
 - Validación de datos
 - Control de duplicados en repositorios
