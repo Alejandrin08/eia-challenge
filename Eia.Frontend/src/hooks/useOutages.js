@@ -43,6 +43,10 @@ export function useOutages() {
     setPage(1);
   };
 
+  /**
+   * Updates sort column and toggles direction to 'asc' if the same column is
+   * selected again while descending; otherwise defaults to 'desc'.
+ */
   const handleSort = (column) => {
     setFilters((prev) => ({
       ...prev,

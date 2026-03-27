@@ -1,19 +1,7 @@
-using System.Net;
-using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using System.Text.Json;
-using Eia.Api.DTOs;
-using Eia.Connector.Models;
-using Eia.Connector.Validation;
 using Eia.Data;
 using Eia.Data.Entities;
-using Eia.Data.Repositories;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Eia.Tests;
 

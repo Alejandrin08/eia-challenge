@@ -1,7 +1,5 @@
-using Eia.Data;
 using Eia.Data.Repositories;
 using Eia.Data.Services;
-using Microsoft.Extensions.Logging;
 
 namespace Eia.Api.Services
 {
@@ -11,6 +9,11 @@ namespace Eia.Api.Services
         IConfiguration config,
         ILogger<RefreshService> logger)
     {
+        /// <summary>
+        /// Orchestrates the full data refresh pipeline: connector → Parquet → SQLite.
+        /// If <c>force</c> is true, re-downloads from the EIA API even if a Parquet file already exists.
+        /// </summary>
+        /// <returns>A tuple with the final status, number of records loaded, and a descriptive message.</returns>
         public async Task<(string Status, int Count, string Message)> RunAsync(
              bool force = false,
              CancellationToken ct = default)
@@ -70,6 +73,10 @@ namespace Eia.Api.Services
             }
         }
 
+        /// <summary>
+        /// Launches the EIA connector as a subprocess and waits for it to complete.
+        /// Supports both local (<c>dotnet run</c>) and Docker (<c>dotnet dll</c>) execution paths.
+        /// </summary>
         private async Task<(bool success, string error)> RunConnectorAsync(CancellationToken ct)
         {
             var connectorPath = config["Connector:ProjectPath"]

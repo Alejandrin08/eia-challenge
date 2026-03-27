@@ -2,7 +2,6 @@ using Eia.Data.Entities;
 using Microsoft.Extensions.Logging;
 using Parquet;
 using Parquet.Schema;
-using Parquet.Data;
 
 namespace Eia.Data.Services
 {
@@ -56,6 +55,10 @@ namespace Eia.Data.Services
             }
         }
 
+        /// <summary>
+        /// Reads a typed column from a Parquet row group by field name.
+        /// Returns an empty array if the field is not found in the schema.
+        /// </summary>
         private static async Task<T[]> ReadColumnAsync<T>(
               ParquetRowGroupReader rowGroup, ParquetSchema schema, string fieldName)
         {

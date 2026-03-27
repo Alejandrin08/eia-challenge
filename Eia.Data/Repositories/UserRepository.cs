@@ -11,6 +11,10 @@ namespace Eia.Data.Repositories
                 .FirstOrDefaultAsync(
                     u => u.Email == email.ToLower() && u.IsActive, ct);
 
+        /// <summary>
+        /// Creates the default admin user if no users exist in the database.
+        /// Intended to run once on application startup.
+        /// </summary>
         public async Task SeedDefaultAdminAsync(
             string email,
             string plainPassword,

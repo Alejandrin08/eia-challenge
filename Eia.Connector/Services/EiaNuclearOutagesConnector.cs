@@ -45,12 +45,17 @@ namespace Eia.Connector.Services
             _checkpoint = new CheckpointService(checkpointPath, logger);
         }
 
+        /// <summary>
+        /// Fetches nuclear outage records from the EIA API and writes them to a Parquet file.
+        /// Supports incremental extraction based on the last saved checkpoint.
+        /// </summary>
+        /// <returns>Total number of valid records written.</returns>
         public async Task<int> ExtractAsync(CancellationToken ct = default)
         {
             var lastPeriod = _checkpoint.LoadLastPeriod();
             var allRecords = new List<NuclearOutageRecord>();
             var offset = 0;
-            var totalAvailable = int.MaxValue;
+            var totalAvailable = int.MaxValue; // sentinel value; replaced with actual total on first response
             var skippedCount = 0;
 
             if (lastPeriod is not null)
@@ -110,6 +115,7 @@ namespace Eia.Connector.Services
 
             await WriteParquetAsync(allRecords, ct);
 
+            // pick the most recent period to persist as the next incremental checkpoint
             var latestPeriod = allRecords
                 .Select(r => r.Period)
                 .Where(p => p is not null)
@@ -135,6 +141,7 @@ namespace Eia.Connector.Services
                       $"&offset={offset}" +
                       $"&length={_pageSize}";
 
+            // append start filter only in incremental mode
             if (startPeriod is not null)
                 url += $"&start={startPeriod}";
 

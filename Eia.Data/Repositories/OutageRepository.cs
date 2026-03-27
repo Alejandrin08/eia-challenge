@@ -7,6 +7,10 @@ namespace Eia.Data.Repositories
     {
         private readonly AppDbContext _dbContext = dbContext;
 
+        /// <summary>
+        /// Returns a paginated, filtered, and sorted list of nuclear outage records.
+        /// </summary>
+        /// <returns>A tuple with the records for the requested page and the total matching count.</returns>
         public async Task<(List<NuclearOutage> items, int total)> GetOutagesAsync(
             string? dateFrom,
             string? dateTo,
@@ -79,6 +83,11 @@ namespace Eia.Data.Repositories
             await _dbContext.SaveChangesAsync(ct);
         }
 
+        /// <summary>
+        /// Inserts records that do not yet exist in the database, grouped under the given extraction run.
+        /// Skips duplicates based on <c>Period</c>. Runs inside a transaction.
+        /// </summary>
+        /// <returns>Number of newly inserted records.</returns>
         public async Task<int> UpsertOutagesAsync(List<NuclearOutage> records, int runId, CancellationToken ct = default)
         {
             int savedCount = 0;

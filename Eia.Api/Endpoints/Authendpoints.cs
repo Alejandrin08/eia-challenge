@@ -1,7 +1,6 @@
 using Eia.Api.Services;
 using Eia.Data.Repositories;
 using Eia.Api.DTOs;
-using System.Security.Claims;
 
 namespace Eia.Api.Endpoints
 {

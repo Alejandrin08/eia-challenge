@@ -5,6 +5,10 @@ namespace Eia.Connector.Services
 {
     public class CheckpointService(string checkpointPath, ILogger logger)
     {
+        /// <summary>
+        /// Reads the last successfully processed period from the checkpoint file.
+        /// Returns <c>null</c> if the file does not exist or cannot be read, triggering a full extraction.
+        /// </summary>
         public string? LoadLastPeriod()
         {
             if (!File.Exists(checkpointPath)) return null;
