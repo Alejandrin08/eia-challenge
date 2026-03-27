@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Eia.Data\Eia.Data.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="appsettings.Production.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
