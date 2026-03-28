@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   eia-api:
-    build: 
+    build:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "5090:8080" 
+      - "5090:8080"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
-      - EIA_API_KEY=${EIA_API_KEY} 
+      - EIA_API_KEY=${EIA_API_KEY}
       - Connector__ProjectPath=/app/connector/Eia.Connector.dll
       - Output__ParquetPath=/app/data/nuclear_outages_raw.parquet
       - Output__CheckpointPath=/app/data/checkpoint.json
@@ -19,10 +19,10 @@ services:
 
   eia-frontend:
     build:
-      context: ./Eia.Frontend 
+      context: ./Eia.Frontend
       dockerfile: Dockerfile.frontend
     ports:
-      - "3000:80" 
+      - "3000:80"
     depends_on:
       - eia-api
 

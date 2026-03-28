@@ -4,6 +4,19 @@ Proyecto que extrae, almacena y visualiza datos de la API de la *Energy Informat
 
 ---
 
+## Despliegue
+
+El proyecto está desplegado y disponible en:
+
+| Servicio | URL |
+|---|---|
+| Frontend | <https://eia-challenge.vercel.app/login> |
+| Backend (Swagger) | <https://eia-challenge.onrender.com/swagger/index.html> |
+
+> **Nota:** El backend está alojado en Render con plan gratuito, por lo que puede tardar ~30 segundos en responder si estuvo inactivo.
+
+---
+
 ## Arquitectura y Tecnologías
 
 | Capa | Tecnología |
